@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+node_modules/
+temp/
+
+# 예전 백업/실험용 DB 스냅샷 - 배포에는 최신 influencers.db + docs/data.json만 필요
+influencers_old.db
+influencers_old2.db
+influencers_20260307.db
+
+# 예전 실험용 리비전 모음 - 우회 기법 메모, 로그인 자동화 샘플 등 공개 저장소에 불필요/부적절한 내용 포함
+old/
