@@ -55,9 +55,7 @@ mark.hl{background:rgba(225,48,108,.16);color:var(--accent);border-radius:3px;pa
 .fbar-inner{
   max-width:1400px;margin:0 auto;padding:0 20px;
   height:48px;display:flex;align-items:center;gap:8px;
-  overflow-x:auto;scrollbar-width:none;
 }
-.fbar-inner::-webkit-scrollbar{display:none}
 .ctab{
   flex-shrink:0;height:30px;padding:0 13px;border-radius:100px;
   border:1.5px solid var(--border);background:transparent;
@@ -67,6 +65,28 @@ mark.hl{background:rgba(225,48,108,.16);color:var(--accent);border-radius:3px;pa
 .ctab:hover{border-color:var(--accent);color:var(--accent)}
 .ctab.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
 .fsep{width:1px;height:22px;background:var(--border);flex-shrink:0}
+
+/* ─ 카테고리 가로 스크롤 (화살표) ─ */
+.cat-arrow{
+  flex-shrink:0;width:26px;height:30px;border-radius:8px;
+  border:1.5px solid var(--border);background:var(--bg);
+  cursor:pointer;font-size:14px;color:var(--text2);line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  transition:color .15s,border-color .15s;
+}
+.cat-arrow:hover{border-color:var(--accent);color:var(--accent)}
+.cat-arrow:disabled{opacity:.3;cursor:default}
+.cat-scroll-wrap{flex:1;min-width:0;overflow:hidden;position:relative}
+.cat-scroll-wrap::before,.cat-scroll-wrap::after{
+  content:'';position:absolute;top:0;bottom:0;width:16px;z-index:1;pointer-events:none;
+}
+.cat-scroll-wrap::before{left:0;background:linear-gradient(90deg,#fff,transparent)}
+.cat-scroll-wrap::after{right:0;background:linear-gradient(270deg,#fff,transparent)}
+.cat-inner{
+  display:flex;align-items:center;gap:6px;height:30px;
+  overflow-x:auto;scrollbar-width:none;scroll-behavior:smooth;
+}
+.cat-inner::-webkit-scrollbar{display:none}
 .fsel{
   flex-shrink:0;height:30px;padding:0 26px 0 10px;
   border:1.5px solid var(--border);border-radius:8px;
@@ -189,33 +209,12 @@ mark.hl{background:rgba(225,48,108,.16);color:var(--accent);border-radius:3px;pa
 </header>
 
 <div class="fbar">
-  <div class="fbar-inner" id="catTabs">
-    <button class="ctab on" data-cat="all">전체</button>
-    <button class="ctab" data-cat="엔터테인먼트">🎤 엔터테인먼트</button>
-    <button class="ctab" data-cat="뷰티">💄 뷰티</button>
-    <button class="ctab" data-cat="패션">👗 패션</button>
-    <button class="ctab" data-cat="음식">🍜 음식</button>
-    <button class="ctab" data-cat="여행">✈️ 여행</button>
-    <button class="ctab" data-cat="라이프스타일">🌿 라이프스타일</button>
-    <button class="ctab" data-cat="피트니스">💪 피트니스</button>
-    <button class="ctab" data-cat="스포츠">⚽ 스포츠</button>
-    <button class="ctab" data-cat="게임">🎮 게임</button>
-    <button class="ctab" data-cat="육아">👶 육아</button>
-    <button class="ctab" data-cat="건강">🏥 건강</button>
-    <button class="ctab" data-cat="비즈니스">💼 비즈니스</button>
-    <button class="ctab" data-cat="IT/테크">💻 IT/테크</button>
-    <button class="ctab" data-cat="럭셔리">💎 럭셔리</button>
-    <button class="ctab" data-cat="자동차">🚗 자동차</button>
-    <button class="ctab" data-cat="금융">💰 금융</button>
-    <button class="ctab" data-cat="쇼핑">🛍 쇼핑</button>
-    <button class="ctab" data-cat="교육">📚 교육</button>
-    <button class="ctab" data-cat="악세서리/주얼리">💍 악세서리</button>
-    <button class="ctab" data-cat="동물">🐾 동물</button>
-    <button class="ctab" data-cat="사진">📷 사진</button>
-    <button class="ctab" data-cat="아트/디자인">🎨 아트/디자인</button>
-    <button class="ctab" data-cat="유머">😂 유머</button>
-    <button class="ctab" data-cat="미디어/글쓰기">✍️ 미디어/글쓰기</button>
-    <div class="fsep"></div>
+  <div class="fbar-inner">
+    <select class="fsel" id="platformSel">
+      <option value="all">전체 플랫폼</option>
+      <option value="instagram">인스타그램</option>
+      <option value="youtube">유튜브</option>
+    </select>
     <select class="fsel" id="tierSel">
       <option value="all">모든 등급</option>
       <option value="메가">🏆 메가 (100만+)</option>
@@ -228,11 +227,38 @@ mark.hl{background:rgba(225,48,108,.16);color:var(--accent);border-radius:3px;pa
       <option value="followers_asc">팔로워 적은순</option>
       <option value="name_asc">이름순</option>
     </select>
-    <select class="fsel" id="platformSel">
-      <option value="all">전체 플랫폼</option>
-      <option value="instagram">인스타그램</option>
-      <option value="youtube">유튜브</option>
-    </select>
+    <div class="fsep"></div>
+    <button class="cat-arrow left" id="catArrowL" onclick="scrollCats(-1)" disabled>‹</button>
+    <div class="cat-scroll-wrap">
+      <div class="cat-inner" id="catTabs">
+        <button class="ctab on" data-cat="all">전체</button>
+        <button class="ctab" data-cat="엔터테인먼트">🎤 엔터테인먼트</button>
+        <button class="ctab" data-cat="뷰티">💄 뷰티</button>
+        <button class="ctab" data-cat="패션">👗 패션</button>
+        <button class="ctab" data-cat="음식">🍜 음식</button>
+        <button class="ctab" data-cat="여행">✈️ 여행</button>
+        <button class="ctab" data-cat="라이프스타일">🌿 라이프스타일</button>
+        <button class="ctab" data-cat="피트니스">💪 피트니스</button>
+        <button class="ctab" data-cat="스포츠">⚽ 스포츠</button>
+        <button class="ctab" data-cat="게임">🎮 게임</button>
+        <button class="ctab" data-cat="육아">👶 육아</button>
+        <button class="ctab" data-cat="건강">🏥 건강</button>
+        <button class="ctab" data-cat="비즈니스">💼 비즈니스</button>
+        <button class="ctab" data-cat="IT/테크">💻 IT/테크</button>
+        <button class="ctab" data-cat="럭셔리">💎 럭셔리</button>
+        <button class="ctab" data-cat="자동차">🚗 자동차</button>
+        <button class="ctab" data-cat="금융">💰 금융</button>
+        <button class="ctab" data-cat="쇼핑">🛍 쇼핑</button>
+        <button class="ctab" data-cat="교육">📚 교육</button>
+        <button class="ctab" data-cat="악세서리/주얼리">💍 악세서리</button>
+        <button class="ctab" data-cat="동물">🐾 동물</button>
+        <button class="ctab" data-cat="사진">📷 사진</button>
+        <button class="ctab" data-cat="아트/디자인">🎨 아트/디자인</button>
+        <button class="ctab" data-cat="유머">😂 유머</button>
+        <button class="ctab" data-cat="미디어/글쓰기">✍️ 미디어/글쓰기</button>
+      </div>
+    </div>
+    <button class="cat-arrow right" id="catArrowR" onclick="scrollCats(1)">›</button>
   </div>
 </div>
 
@@ -459,6 +485,20 @@ function setCategory(cat) {
   if (activeTab) activeTab.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
   applyAndRender();
 }
+
+/* ── 카테고리 화살표 스크롤 ── */
+function scrollCats(dir) {
+  const el = document.getElementById('catTabs');
+  el.scrollBy({left: dir * 200, behavior: 'smooth'});
+  setTimeout(updateCatArrows, 320);
+}
+function updateCatArrows() {
+  const el = document.getElementById('catTabs');
+  document.getElementById('catArrowL').disabled = el.scrollLeft <= 0;
+  document.getElementById('catArrowR').disabled = el.scrollLeft + el.clientWidth >= el.scrollWidth - 2;
+}
+document.getElementById('catTabs').addEventListener('scroll', updateCatArrows, {passive: true});
+setTimeout(updateCatArrows, 100);
 
 /* ── 이벤트 바인딩 ── */
 document.getElementById('catTabs').addEventListener('click', e => {
