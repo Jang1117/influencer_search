@@ -4,13 +4,14 @@ node_modules/
 temp/
 
 # 데이터 수집/관리용 파일 - 공개 저장소에는 docs/ (정적 뷰어)만 올림
-README.md
-index.html
-influencers.db
-package.json
-script.js
-server.js
-server.py
+# (루트 파일만 대상으로 하도록 앵커 처리 - delete-api/ 등 하위 폴더 파일까지 무시되지 않게)
+/README.md
+/index.html
+/influencers.db
+/package.json
+/script.js
+/server.js
+/server.py
 
 # 예전 백업/실험용 DB 스냅샷 - 배포에는 최신 influencers.db + docs/data.json만 필요
 influencers_old.db

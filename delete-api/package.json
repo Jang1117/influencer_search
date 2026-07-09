@@ -1,0 +1,17 @@
+{
+  "name": "infl-kr-delete-api",
+  "version": "1.0.0",
+  "description": "docs/index.html(GitHub Pages 정적 뷰어)에서 삭제한 인플루언서 id를 Redis에 기록하는 API. Render Web Service로 배포.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "redis": "^4.6.14"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

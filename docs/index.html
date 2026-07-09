@@ -55,9 +55,7 @@ mark.hl{background:rgba(225,48,108,.16);color:var(--accent);border-radius:3px;pa
 .fbar-inner{
   max-width:1400px;margin:0 auto;padding:0 20px;
   height:48px;display:flex;align-items:center;gap:8px;
-  overflow-x:auto;scrollbar-width:none;
 }
-.fbar-inner::-webkit-scrollbar{display:none}
 .ctab{
   flex-shrink:0;height:30px;padding:0 13px;border-radius:100px;
   border:1.5px solid var(--border);background:transparent;
@@ -67,6 +65,28 @@ mark.hl{background:rgba(225,48,108,.16);color:var(--accent);border-radius:3px;pa
 .ctab:hover{border-color:var(--accent);color:var(--accent)}
 .ctab.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
 .fsep{width:1px;height:22px;background:var(--border);flex-shrink:0}
+
+/* ─ 카테고리 가로 스크롤 (화살표) ─ */
+.cat-arrow{
+  flex-shrink:0;width:26px;height:30px;border-radius:8px;
+  border:1.5px solid var(--border);background:var(--bg);
+  cursor:pointer;font-size:14px;color:var(--text2);line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  transition:color .15s,border-color .15s;
+}
+.cat-arrow:hover{border-color:var(--accent);color:var(--accent)}
+.cat-arrow:disabled{opacity:.3;cursor:default}
+.cat-scroll-wrap{flex:1;min-width:0;overflow:hidden;position:relative}
+.cat-scroll-wrap::before,.cat-scroll-wrap::after{
+  content:'';position:absolute;top:0;bottom:0;width:16px;z-index:1;pointer-events:none;
+}
+.cat-scroll-wrap::before{left:0;background:linear-gradient(90deg,#fff,transparent)}
+.cat-scroll-wrap::after{right:0;background:linear-gradient(270deg,#fff,transparent)}
+.cat-inner{
+  display:flex;align-items:center;gap:6px;height:30px;
+  overflow-x:auto;scrollbar-width:none;scroll-behavior:smooth;
+}
+.cat-inner::-webkit-scrollbar{display:none}
 .fsel{
   flex-shrink:0;height:30px;padding:0 26px 0 10px;
   border:1.5px solid var(--border);border-radius:8px;
@@ -152,7 +172,32 @@ mark.hl{background:rgba(225,48,108,.16);color:var(--accent);border-radius:3px;pa
   font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;
   opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s;
 }
+.ig-btn.yt-btn{background:#ff0000}
 @media(hover:none){.ig-btn{opacity:1;transform:none}}
+
+/* ─ 카드 래퍼 + X 삭제 버튼 ─ */
+.card-wrap{position:relative}
+.card-del{
+  position:absolute;top:6px;right:6px;z-index:5;
+  width:22px;height:22px;border-radius:50%;
+  background:rgba(0,0,0,.5);border:none;
+  color:#fff;font-size:11px;line-height:1;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .15s,background .15s;
+}
+.card-wrap:hover .card-del{opacity:1}
+.card-del:hover{background:rgba(220,39,39,.9) !important}
+@media(hover:none){.card-del{opacity:.7}}
+
+/* ─ 토스트 ─ */
+.toast{
+  position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);
+  background:#222;color:#fff;font-size:13px;font-weight:500;
+  padding:10px 18px;border-radius:100px;box-shadow:0 6px 20px rgba(0,0,0,.25);
+  opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:400;
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{background:#e53e3e}
 
 /* ─ EMPTY ─ */
 .empty{text-align:center;padding:80px 20px;color:var(--text3)}
@@ -189,33 +234,12 @@ mark.hl{background:rgba(225,48,108,.16);color:var(--accent);border-radius:3px;pa
 </header>
 
 <div class="fbar">
-  <div class="fbar-inner" id="catTabs">
-    <button class="ctab on" data-cat="all">전체</button>
-    <button class="ctab" data-cat="엔터테인먼트">🎤 엔터테인먼트</button>
-    <button class="ctab" data-cat="뷰티">💄 뷰티</button>
-    <button class="ctab" data-cat="패션">👗 패션</button>
-    <button class="ctab" data-cat="음식">🍜 음식</button>
-    <button class="ctab" data-cat="여행">✈️ 여행</button>
-    <button class="ctab" data-cat="라이프스타일">🌿 라이프스타일</button>
-    <button class="ctab" data-cat="피트니스">💪 피트니스</button>
-    <button class="ctab" data-cat="스포츠">⚽ 스포츠</button>
-    <button class="ctab" data-cat="게임">🎮 게임</button>
-    <button class="ctab" data-cat="육아">👶 육아</button>
-    <button class="ctab" data-cat="건강">🏥 건강</button>
-    <button class="ctab" data-cat="비즈니스">💼 비즈니스</button>
-    <button class="ctab" data-cat="IT/테크">💻 IT/테크</button>
-    <button class="ctab" data-cat="럭셔리">💎 럭셔리</button>
-    <button class="ctab" data-cat="자동차">🚗 자동차</button>
-    <button class="ctab" data-cat="금융">💰 금융</button>
-    <button class="ctab" data-cat="쇼핑">🛍 쇼핑</button>
-    <button class="ctab" data-cat="교육">📚 교육</button>
-    <button class="ctab" data-cat="악세서리/주얼리">💍 악세서리</button>
-    <button class="ctab" data-cat="동물">🐾 동물</button>
-    <button class="ctab" data-cat="사진">📷 사진</button>
-    <button class="ctab" data-cat="아트/디자인">🎨 아트/디자인</button>
-    <button class="ctab" data-cat="유머">😂 유머</button>
-    <button class="ctab" data-cat="미디어/글쓰기">✍️ 미디어/글쓰기</button>
-    <div class="fsep"></div>
+  <div class="fbar-inner">
+    <select class="fsel" id="platformSel">
+      <option value="all">전체 플랫폼</option>
+      <option value="instagram">인스타그램</option>
+      <option value="youtube">유튜브</option>
+    </select>
     <select class="fsel" id="tierSel">
       <option value="all">모든 등급</option>
       <option value="메가">🏆 메가 (100만+)</option>
@@ -228,6 +252,38 @@ mark.hl{background:rgba(225,48,108,.16);color:var(--accent);border-radius:3px;pa
       <option value="followers_asc">팔로워 적은순</option>
       <option value="name_asc">이름순</option>
     </select>
+    <div class="fsep"></div>
+    <button class="cat-arrow left" id="catArrowL" onclick="scrollCats(-1)" disabled>‹</button>
+    <div class="cat-scroll-wrap">
+      <div class="cat-inner" id="catTabs">
+        <button class="ctab on" data-cat="all">전체</button>
+        <button class="ctab" data-cat="엔터테인먼트">🎤 엔터테인먼트</button>
+        <button class="ctab" data-cat="뷰티">💄 뷰티</button>
+        <button class="ctab" data-cat="패션">👗 패션</button>
+        <button class="ctab" data-cat="음식">🍜 음식</button>
+        <button class="ctab" data-cat="여행">✈️ 여행</button>
+        <button class="ctab" data-cat="라이프스타일">🌿 라이프스타일</button>
+        <button class="ctab" data-cat="피트니스">💪 피트니스</button>
+        <button class="ctab" data-cat="스포츠">⚽ 스포츠</button>
+        <button class="ctab" data-cat="게임">🎮 게임</button>
+        <button class="ctab" data-cat="육아">👶 육아</button>
+        <button class="ctab" data-cat="건강">🏥 건강</button>
+        <button class="ctab" data-cat="비즈니스">💼 비즈니스</button>
+        <button class="ctab" data-cat="IT/테크">💻 IT/테크</button>
+        <button class="ctab" data-cat="럭셔리">💎 럭셔리</button>
+        <button class="ctab" data-cat="자동차">🚗 자동차</button>
+        <button class="ctab" data-cat="금융">💰 금융</button>
+        <button class="ctab" data-cat="쇼핑">🛍 쇼핑</button>
+        <button class="ctab" data-cat="교육">📚 교육</button>
+        <button class="ctab" data-cat="악세서리/주얼리">💍 악세서리</button>
+        <button class="ctab" data-cat="동물">🐾 동물</button>
+        <button class="ctab" data-cat="사진">📷 사진</button>
+        <button class="ctab" data-cat="아트/디자인">🎨 아트/디자인</button>
+        <button class="ctab" data-cat="유머">😂 유머</button>
+        <button class="ctab" data-cat="미디어/글쓰기">✍️ 미디어/글쓰기</button>
+      </div>
+    </div>
+    <button class="cat-arrow right" id="catArrowR" onclick="scrollCats(1)">›</button>
   </div>
 </div>
 
@@ -241,6 +297,7 @@ mark.hl{background:rgba(225,48,108,.16);color:var(--accent);border-radius:3px;pa
   <p>검색 결과가 없습니다</p>
   <p style="font-size:13px;margin-top:4px;color:var(--text3)">다른 키워드나 필터를 써보세요</p>
 </div>
+<div class="toast" id="toast"></div>
 
 <script>
 /* ═══════════════════════════════════════════════
@@ -250,10 +307,47 @@ mark.hl{background:rgba(225,48,108,.16);color:var(--accent);border-radius:3px;pa
    ═══════════════════════════════════════════════ */
 
 const DATA_URL = './data.json';
+// docs/는 자체 DB가 없으므로, 삭제한 id는 Render에 배포한 delete-api(Redis)에 기록한다.
+// 배포 후 아래 주소를 실제 Render 서비스 URL로 바꿔주세요. (delete-api/, render.yaml 참고)
+const DELETE_API = 'https://infl-kr-delete-api.onrender.com';
 
 let ALL  = [];   // 전체 원본 데이터
 let VIEW = [];   // 현재 필터 결과
-let state = { q:'', cat:'all', tier:'all', sort:'followers_desc' };
+let state = { q:'', cat:'all', tier:'all', sort:'followers_desc', platform:'all' };
+
+/* ── 토스트 ── */
+let toastTimer;
+function showToast(msg, isErr) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.toggle('err', !!isErr);
+  el.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('on'), 2200);
+}
+
+/* ── 삭제 ──
+   카드의 X를 누르면 즉시 화면에서 제거하고, delete-api(Redis)에 id를 기록한다.
+   delete-api 저장이 실패해도 이번 화면에서는 계속 숨겨진 채로 유지된다(새로고침하면 다시 보일 수 있음). */
+async function deleteInfluencer(e, id) {
+  e.preventDefault();
+  e.stopPropagation();
+
+  ALL = ALL.filter(inf => inf.id !== id);
+  applyAndRender();
+
+  try {
+    const r = await fetch(`${DELETE_API}/api/deleted-ids`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id })
+    });
+    if (!r.ok) throw new Error('요청 실패');
+    showToast('삭제되었습니다');
+  } catch (err) {
+    showToast('삭제 서버에 연결할 수 없어 이 화면에서만 숨겼습니다', true);
+  }
+}
 
 /* ── 유틸 ── */
 const fmt = n => {
@@ -315,6 +409,17 @@ async function loadData() {
       document.getElementById('updatedAt').textContent =
         '업데이트 ' + d.toLocaleDateString('ko-KR', {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'});
     }
+
+    // delete-api에 기록된 삭제 id들을 걸러낸다 (연결 실패 시 무시하고 계속 진행)
+    try {
+      const dr = await fetch(`${DELETE_API}/api/deleted-ids`);
+      if (dr.ok) {
+        const { ids } = await dr.json();
+        const deleted = new Set((ids || []).map(String));
+        ALL = ALL.filter(inf => !deleted.has(String(inf.id)));
+      }
+    } catch (e) { /* delete-api 미배포/오프라인이면 그냥 전체 표시 */ }
+
     applyAndRender();
   } catch(e) {
     document.getElementById('grid').innerHTML = `
@@ -330,9 +435,10 @@ async function loadData() {
 /* ── 필터 + 검색(다중 단어 AND) + 정렬 ── */
 function applyAndRender() {
   const terms = state.q.toLowerCase().trim().split(/\s+/).filter(Boolean);
-  const cat   = state.cat;
-  const tier  = state.tier;
-  const sort  = state.sort;
+  const cat      = state.cat;
+  const tier     = state.tier;
+  const sort     = state.sort;
+  const platform = state.platform;
 
   VIEW = ALL.filter(inf => {
     if (terms.length) {
@@ -345,6 +451,7 @@ function applyAndRender() {
       if (!cats.includes(cat)) return false;
     }
     if (tier !== 'all' && inf.tier !== tier) return false;
+    if (platform !== 'all' && (inf.platform||'instagram') !== platform) return false;
     return true;
   });
 
@@ -382,6 +489,7 @@ function catTagsHtml(inf) {
 }
 
 function renderCard(inf, q) {
+  const isYt = inf.platform === 'youtube';
   const ig = inf.profileUrl || `https://instagram.com/${(inf.handle||'').replace('@','')}`;
   const nameEsc = (inf.name || (inf.handle||'').replace('@','')).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   const handleEsc = (inf.handle||'').replace(/</g,'&lt;');
@@ -392,29 +500,38 @@ function renderCard(inf, q) {
     ? `<img src="${inf.avatarUrl}" alt="" loading="lazy"
          onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'${emoji}'}))">`
     : emoji;
+  const platformBtn = isYt
+    ? `<div class="ig-btn yt-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M23.5 6.2c-.3-1-1-1.8-2-2.1C19.7 3.5 12 3.5 12 3.5s-7.7 0-9.5.6c-1 .3-1.7 1.1-2 2.1C0 8 0 12 0 12s0 4 .5 5.8c.3 1 1 1.8 2 2.1 1.8.6 9.5.6 9.5.6s7.7 0 9.5-.6c1-.3 1.7-1.1 2-2.1.5-1.8.5-5.8.5-5.8s0-4-.5-5.8zM9.5 15.5v-7l6.5 3.5-6.5 3.5z"/></svg>
+        유튜브 바로가기
+      </div>`
+    : `<div class="ig-btn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none"/>
+        </svg>
+        인스타그램 바로가기
+      </div>`;
 
   return `
-<a class="card" href="${ig}" target="_blank" rel="noopener noreferrer">
-  <div class="cv">
-    <div class="cv-bg" style="background:${cover(inf.category)}"></div>
-    <div class="cv-tier">${TIER_LABEL[inf.tier]||inf.tier||''}</div>
-    <div class="av">${av}</div>
-  </div>
-  <div class="cb">
-    <div class="cn">${name}</div>
-    <div class="ch">${handle}</div>
-    <div class="cats" id="cats_${inf.id}">${catTagsHtml(inf)}</div>
-    <div class="cf" title="정확한 수집값: ${(inf.followers||0).toLocaleString()}명">${fmt(inf.followers)} <span>팔로워</span></div>
-  </div>
-  <div class="ig-btn">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2">
-      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-      <circle cx="12" cy="12" r="4"/>
-      <circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none"/>
-    </svg>
-    인스타그램 바로가기
-  </div>
-</a>`;
+<div class="card-wrap" data-id="${inf.id}">
+  <a class="card" href="${ig}" target="_blank" rel="noopener noreferrer">
+    <div class="cv">
+      <div class="cv-bg" style="background:${cover(inf.category)}"></div>
+      <div class="cv-tier">${TIER_LABEL[inf.tier]||inf.tier||''}</div>
+      <div class="av">${av}</div>
+    </div>
+    <div class="cb">
+      <div class="cn">${name}</div>
+      <div class="ch">${handle}</div>
+      <div class="cats" id="cats_${inf.id}">${catTagsHtml(inf)}</div>
+      <div class="cf" title="정확한 수집값: ${(inf.followers||0).toLocaleString()}명">${fmt(inf.followers)} <span>${isYt ? '구독자' : '팔로워'}</span></div>
+    </div>
+    ${platformBtn}
+  </a>
+  <button class="card-del" title="삭제" onclick="deleteInfluencer(event,${inf.id})">✕</button>
+</div>`;
 }
 
 function render() {
@@ -453,6 +570,20 @@ function setCategory(cat) {
   applyAndRender();
 }
 
+/* ── 카테고리 화살표 스크롤 ── */
+function scrollCats(dir) {
+  const el = document.getElementById('catTabs');
+  el.scrollBy({left: dir * 200, behavior: 'smooth'});
+  setTimeout(updateCatArrows, 320);
+}
+function updateCatArrows() {
+  const el = document.getElementById('catTabs');
+  document.getElementById('catArrowL').disabled = el.scrollLeft <= 0;
+  document.getElementById('catArrowR').disabled = el.scrollLeft + el.clientWidth >= el.scrollWidth - 2;
+}
+document.getElementById('catTabs').addEventListener('scroll', updateCatArrows, {passive: true});
+setTimeout(updateCatArrows, 100);
+
 /* ── 이벤트 바인딩 ── */
 document.getElementById('catTabs').addEventListener('click', e => {
   const tab = e.target.closest('.ctab');
@@ -465,6 +596,9 @@ document.getElementById('tierSel').addEventListener('change', e => {
 });
 document.getElementById('sortSel').addEventListener('change', e => {
   state.sort = e.target.value; applyAndRender();
+});
+document.getElementById('platformSel').addEventListener('change', e => {
+  state.platform = e.target.value; applyAndRender();
 });
 
 let searchTimer;

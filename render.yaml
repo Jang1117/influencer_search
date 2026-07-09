@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: infl-kr-delete-api
+    runtime: node
+    rootDir: delete-api
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: infl-kr-redis
+          property: connectionString
+
+  - type: redis
+    name: infl-kr-redis
+    plan: free
+    ipAllowList: []
