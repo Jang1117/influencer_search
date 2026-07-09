@@ -228,6 +228,11 @@ mark.hl{background:rgba(225,48,108,.16);color:var(--accent);border-radius:3px;pa
       <option value="followers_asc">팔로워 적은순</option>
       <option value="name_asc">이름순</option>
     </select>
+    <select class="fsel" id="platformSel">
+      <option value="all">전체 플랫폼</option>
+      <option value="instagram">인스타그램</option>
+      <option value="youtube">유튜브</option>
+    </select>
   </div>
 </div>
 
@@ -253,7 +258,7 @@ const DATA_URL = './data.json';
 
 let ALL  = [];   // 전체 원본 데이터
 let VIEW = [];   // 현재 필터 결과
-let state = { q:'', cat:'all', tier:'all', sort:'followers_desc' };
+let state = { q:'', cat:'all', tier:'all', sort:'followers_desc', platform:'all' };
 
 /* ── 유틸 ── */
 const fmt = n => {
@@ -330,9 +335,10 @@ async function loadData() {
 /* ── 필터 + 검색(다중 단어 AND) + 정렬 ── */
 function applyAndRender() {
   const terms = state.q.toLowerCase().trim().split(/\s+/).filter(Boolean);
-  const cat   = state.cat;
-  const tier  = state.tier;
-  const sort  = state.sort;
+  const cat      = state.cat;
+  const tier     = state.tier;
+  const sort     = state.sort;
+  const platform = state.platform;
 
   VIEW = ALL.filter(inf => {
     if (terms.length) {
@@ -345,6 +351,7 @@ function applyAndRender() {
       if (!cats.includes(cat)) return false;
     }
     if (tier !== 'all' && inf.tier !== tier) return false;
+    if (platform !== 'all' && (inf.platform||'instagram') !== platform) return false;
     return true;
   });
 
@@ -465,6 +472,9 @@ document.getElementById('tierSel').addEventListener('change', e => {
 });
 document.getElementById('sortSel').addEventListener('change', e => {
   state.sort = e.target.value; applyAndRender();
+});
+document.getElementById('platformSel').addEventListener('change', e => {
+  state.platform = e.target.value; applyAndRender();
 });
 
 let searchTimer;
