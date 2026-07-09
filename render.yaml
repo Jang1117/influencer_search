@@ -7,13 +7,8 @@ services:
     buildCommand: npm install
     startCommand: npm start
     envVars:
+      # Render 무료 Redis(Key Value)는 30일 후 인스턴스가 통째로 삭제되므로,
+      # 만료가 없는 Upstash Redis의 연결 문자열(rediss://...)을 사용한다.
+      # Render 대시보드 > 이 서비스 > Environment 탭에서 직접 값을 입력할 것 (레포에는 비밀값을 커밋하지 않음)
       - key: REDIS_URL
-        fromService:
-          type: redis
-          name: infl-kr-redis
-          property: connectionString
-
-  - type: redis
-    name: infl-kr-redis
-    plan: free
-    ipAllowList: []
+        sync: false
